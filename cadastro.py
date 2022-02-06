@@ -5,7 +5,7 @@ import mysql.connector
 con = mysql.connector.connect(
     host='localhost', database='cadastro_estoque', user='root', password='anova234')
 
-#função de inserir no banco de dados
+#função de inserir no banco de dados.
 def insert():
     linha1 = formulario.lineEdit.text()
     linha2 = formulario.lineEdit_2.text()
