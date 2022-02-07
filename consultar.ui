@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>710</width>
-    <height>560</height>
+    <width>672</width>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,13 +35,59 @@
      <string>Consultar Produtos</string>
     </property>
    </widget>
+   <widget class="QTableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>50</y>
+      <width>601</width>
+      <height>411</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <column>
+     <property name="text">
+      <string>ID</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>CÓDIGO</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>DESCRIÇÃO</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>PREÇO</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>CATEGORIA</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>QUANTIDADE</string>
+     </property>
+    </column>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>710</width>
+     <width>672</width>
      <height>24</height>
     </rect>
    </property>
