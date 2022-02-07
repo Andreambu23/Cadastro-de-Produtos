@@ -6,3 +6,11 @@ Este sistema não foi criado do zero por mim, ainda estou longe disso, praticame
 Apesar de estar acompanhando os videos do canal, muitos passos estão desatualizados, nestes pontos tive dificuldade, pois, precisei pesquisar e fazer de maneira atualizada, depois de muito quebrar a cabeça consegui chegar na parte de inserir os dados no MySQL.
 
 Ainda estou terminando de acompanhar os vídeos, o tempo está bem curto, mas logo terminarei de acrescentar as demais funções.
+
+--------
+
+Função insert ok
+Função visualizar DB ok
+
+Próximos passos
+Funções, alterar, deletar e selecionar(Ex.: consulta de valor ou quantidade)
