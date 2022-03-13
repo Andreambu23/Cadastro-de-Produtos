@@ -90,8 +90,7 @@ def insert():
     cursor = con.cursor()
     query = (
         "INSERT INTO produtos (codigo, descricao, preco, categoria, quantidade) VALUES (%s,%s,%s,%s,%s)")
-    dados = (str(linha1), str(linha2), str(linha3),
-             categoria, str(linha4))
+    dados = (str(linha1), str(linha2), str(linha3), categoria, str(linha4))
     cursor.execute(query, dados)
     con.commit()
 
@@ -123,10 +122,8 @@ def consult():
                 i, j, QtWidgets.QTableWidgetItem(str(readed_data[i][j])))
 
 
-"""def edit(): - Alterar qualquer dado inserido no DB
-cursor = con.cursor()
-query = ("UPDATE produtos SET % = ????? WHERE (% = %")
-"""
+#def edit(): - Alterar qualquer dado inserido no DB
+
 # Apagar dado inserido no DB
 
 
@@ -141,7 +138,7 @@ def delete():
     cod_value = readed_data[line][0]
     print(cod_value)
     query2 = (
-        "DELETE FROM cadastro_estoque.produtos WHERE codigo = " + str(cod_value))
+        "DELETE FROM `cadastro_estoque`.`produtos` WHERE (`codigo` = `%s`);") 
     cursor.execute(query2)
 
     print("Item excluido da lista.")
