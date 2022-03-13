@@ -1,9 +1,6 @@
 from asyncore import read
-import readline
-from sqlite3 import Cursor
 from PyQt5 import uic
 from PyQt5 import QtWidgets
-from PyQt5 import QtQuickWidgets
 from reportlab.pdfgen import canvas
 
 # conectando com o banco de dados
@@ -122,7 +119,7 @@ def consult():
                 i, j, QtWidgets.QTableWidgetItem(str(readed_data[i][j])))
 
 
-#def edit(): - Alterar qualquer dado inserido no DB
+# def edit(): - Alterar qualquer dado inserido no DB
 
 # Apagar dado inserido no DB
 
@@ -137,8 +134,9 @@ def delete():
     readed_data = cursor.fetchall()
     cod_value = readed_data[line][0]
     print(cod_value)
+    cursor = con.cursor()
     query2 = (
-        "DELETE FROM `cadastro_estoque`.`produtos` WHERE (`codigo` = `%s`);") 
+        "DELETE FROM `cadastro_estoque`.`produtos` WHERE `codigo` = '" + str(cod_value) + ("';"))
     cursor.execute(query2)
 
     print("Item excluido da lista.")
