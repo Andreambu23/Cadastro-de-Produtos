@@ -1,13 +1,16 @@
 from asyncore import read
 import readline
 from sqlite3 import Cursor
-from PyQt5 import uic, QtWidgets  # importando a lib do QT Designer
+from PyQt5 import uic
+from PyQt5 import QtWidgets
+from PyQt5 import QtQuickWidgets
 from reportlab.pdfgen import canvas
 
 # conectando com o banco de dados
+
 import mysql.connector
 con = mysql.connector.connect(
-    host='localhost', database='cadastro_estoque', user='root', password='anova234')
+    host='localhost', database='cadastro_estoque', user='andre2', password='anova123')
 
 # Exportar em arquivo
 
@@ -23,28 +26,29 @@ def export():
     pdf.drawString(200, 800, "Produtos Cadastrados:")
     pdf.setFont("Times-Bold", 12)
 
-    #pdf.drawString(10,750, "ID")
-    pdf.drawString(20, 750, "CÓD")
-    pdf.drawString(60, 750, "PROD")
-    pdf.drawString(260, 750, "PREÇO")
-    pdf.drawString(340, 750, "CAT")
-    pdf.drawString(420, 750, "QTD")
+    # Posições dos tópicos na exibição do arquivo em PDF "X, Y"
+    # X é a distância entre um titulo em outro na mesma linha
+    pdf.drawString(10, 750, "CÓD")
+    pdf.drawString(50, 750, "PRODUTO")
+    pdf.drawString(280, 750, "PREÇO")
+    pdf.drawString(330, 750, "CATEGORIA")
+    pdf.drawString(480, 750, "QTD")
 
+    # Linha 37 espaçamento entre linhas.
     for i in range(0, len(readed_data)):
-        y = y + 20
-        #pdf.drawString(10,750 -y, str(readed_data[i][0]))
-        pdf.drawString(20, 750 - y, str(readed_data[i][1]))
-        pdf.drawString(60, 750 - y, str(readed_data[i][2]))
-        pdf.drawString(260, 750 - y, str(readed_data[i][3]))
-        pdf.drawString(340, 750 - y, str(readed_data[i][4]))
-        pdf.drawString(420, 750 - y, str(readed_data[i][5]))
+        y = y + 15
+        pdf.drawString(10, 750 - y, str(readed_data[i][0]))
+        pdf.drawString(50, 750 - y, str(readed_data[i][1]))
+        pdf.drawString(280, 750 - y, str(readed_data[i][2]))
+        pdf.drawString(330, 750 - y, str(readed_data[i][3]))
+        pdf.drawString(480, 750 - y, str(readed_data[i][4]))
+        #pdf.drawString(420, 750 - y, str(readed_data[i][5]))
 
     pdf.save()
     print("Planilha gerada com sucesso.")
 
 
 # função de inserir no banco de dados.
-
 
 def insert():
     linha1 = formulario.lineEdit.text()
@@ -80,17 +84,19 @@ def insert():
     print("Codigo ", linha1)
     print("Descrição ", linha2)
     print("Preço ", linha3)
-    print("Quantidade ", linha4)
+    print("Categoria", linha4)
 
-    # Comando de inserção de dados
+    # Comando SQL de inserção de dados
     cursor = con.cursor()
     query = (
         "INSERT INTO produtos (codigo, descricao, preco, categoria, quantidade) VALUES (%s,%s,%s,%s,%s)")
-    dados = (str(linha1), str(linha2), str(linha3), categoria, str(linha4))
+    dados = (str(linha1), str(linha2), str(linha3),
+             categoria, str(linha4))
     cursor.execute(query, dados)
     con.commit()
 
-    # Limpando os campos após cada cadastro
+    # Limpando os campos de texo após cada cadastro
+
     formulario.lineEdit.setText("")
     formulario.lineEdit_2.setText("")
     formulario.lineEdit_3.setText("")
@@ -104,31 +110,54 @@ def consult():
     consultar.show()
 
     cursor = con.cursor()
-    query = ("SELECT * FROM produtos;")
+    query = ("SELECT codigo, descricao, preco, categoria, quantidade FROM produtos;")
     cursor.execute(query)
     readed_data = cursor.fetchall()
 
     consultar.tableWidget.setRowCount(len(readed_data))
-    consultar.tableWidget.setColumnCount(6)
+    consultar.tableWidget.setColumnCount(5)
 
     for i in range(0, len(readed_data)):
-        for j in range(0, 6):
+        for j in range(0, 5):
             consultar.tableWidget.setItem(
                 i, j, QtWidgets.QTableWidgetItem(str(readed_data[i][j])))
 
 
-# def edit(): - Alterar qualquer dado inserido no DB
-# def delete(): - Apagar dado inserido no DB
+"""def edit(): - Alterar qualquer dado inserido no DB
+cursor = con.cursor()
+query = ("UPDATE produtos SET % = ????? WHERE (% = %")
+"""
+# Apagar dado inserido no DB
+
+
+def delete():
+
+    line = consultar.tableWidget.currentRow()
+    consultar.tableWidget.removeRow(line)
+    cursor = con.cursor()
+    query1 = ("Select codigo FROM produtos")
+    cursor.execute(query1)
+    readed_data = cursor.fetchall()
+    cod_value = readed_data[line][0]
+    print(cod_value)
+    query2 = (
+        "DELETE FROM cadastro_estoque.produtos WHERE codigo = " + str(cod_value))
+    cursor.execute(query2)
+
+    print("Item excluido da lista.")
+
+
 # def select(): - Selecionar produdo cadastrado e exibir na tela, "Ex.: Consulta de preço"
 
 app = QtWidgets.QApplication([])
 formulario = uic.loadUi(
-    "/home/andre/Área de Trabalho/Cadastro-de-Produtos/formulario.ui")
+    "/home/andre/Área de Trabalho/Estudos/Cadastro-de-Produtos/formulario.ui")
 consultar = uic.loadUi(
-    "/home/andre/Área de Trabalho/Cadastro-de-Produtos/consultar.ui")
+    "/home/andre/Área de Trabalho/Estudos/Cadastro-de-Produtos/consultar.ui")
 formulario.pushButton.clicked.connect(insert)
 formulario.pushButton_2.clicked.connect(consult)
 consultar.pushButton.clicked.connect(export)
+consultar.pushButton_2.clicked.connect(delete)
 
 formulario.show()
 app.exec()

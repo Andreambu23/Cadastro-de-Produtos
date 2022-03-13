@@ -52,11 +52,6 @@
     </attribute>
     <column>
      <property name="text">
-      <string>ID</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
       <string>CÓDIGO</string>
      </property>
     </column>
@@ -91,7 +86,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
+     <string notr="true">alternate-background-color: rgb(52, 101, 164);</string>
     </property>
     <property name="text">
      <string>Exportar</string>
@@ -106,8 +101,24 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">alternate-background-color: rgb(52, 101, 164);</string>
+    </property>
     <property name="text">
      <string>Excluir</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>490</y>
+      <width>89</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Editar</string>
     </property>
    </widget>
   </widget>
@@ -117,7 +128,7 @@
      <x>0</x>
      <y>0</y>
      <width>672</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
