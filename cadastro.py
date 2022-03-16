@@ -6,7 +6,8 @@ from numpy import save
 from reportlab.pdfgen import canvas
 
 c = 0
-# conectando com o banco de dados
+
+# Conectando com o banco de dados
 
 con = mysql.connector.connect(
     host='localhost', database='cadastro_estoque', user='andre2', password='anova123')
@@ -47,7 +48,7 @@ def export():
     print("Planilha gerada com sucesso.")
 
 
-# função de inserir no banco de dados.
+# Função de inserir as informações digitadas nos campos no banco de dados SQL
 
 def insert():
     linha1 = formulario.lineEdit.text()
@@ -86,6 +87,7 @@ def insert():
     print("Categoria", linha4)
 
     # Comando SQL de inserção de dados
+
     cursor = con.cursor()
     query = (
         "INSERT INTO produtos (codigo, descricao, preco, categoria, quantidade) VALUES (%s,%s,%s,%s,%s)")
@@ -100,7 +102,7 @@ def insert():
     formulario.lineEdit_3.setText("")
     formulario.lineEdit_4.setText("")
 
-# função consultar no banco de dados
+# Função consultar no banco de dados
 
 
 def consult():
@@ -160,6 +162,7 @@ def save():
     quantidade = editwindow.lineEdit_5.text()
 
     # Atualizando o banco de dados
+
     cursor = con.cursor()
     editquery = ("UPDATE produtos SET descricao = '{}', preco = '{}', categoria = '{}', quantidade = '{}' WHERE codigo = {}".format(
         descricao, preco, categoria, quantidade, c))
@@ -193,7 +196,7 @@ def delete():
     print("Item excluido da lista.")
 
 
-# def select(): - Selecionar produdo cadastrado e exibir na tela, "Ex.: Consulta de preço"
+# Selecionar produdo cadastrado e exibir na tela, "Ex.: Consulta de preço"
 
 app = QtWidgets.QApplication([])
 formulario = uic.loadUi(
@@ -211,3 +214,7 @@ editwindow.pushButton.clicked.connect(save)
 
 formulario.show()
 app.exec()
+
+
+""" Finalmente, com o pouco tempo que eu tenho consegui finalizar essa parte, à partir daqui é que começa a parte de praticar, ainda assim, como estou iniciando tive muita dificuldade em conseguir que todas as funções funcionassem, pesquisei por conta própria, tirei dúvidas em grupos do Telegram, o GitHub me ajudou demais, várias das dúvidas e vários problemas que eu tive foram possíveis encontrar a solução lá.
+    A ideia agora, é criar uma tela de Login e com esse login se conectar ao banco de dados, delegando menos atribuições e deixando as funções de editar e excluir dados apenas para o administrador, além do mais, será acrescentada uma tela que será basicamente a tela de um caixa de comércio, que irá buscar o produto pelo código lido, inserir em um display e fazer a somatória dos valores de cada produto."""
