@@ -1,11 +1,13 @@
+import mysql.connector
 from asyncore import read
 from PyQt5 import uic
 from PyQt5 import QtWidgets
+from numpy import save
 from reportlab.pdfgen import canvas
 
+c = 0
 # conectando com o banco de dados
 
-import mysql.connector
 con = mysql.connector.connect(
     host='localhost', database='cadastro_estoque', user='andre2', password='anova123')
 
@@ -119,12 +121,54 @@ def consult():
                 i, j, QtWidgets.QTableWidgetItem(str(readed_data[i][j])))
 
 
-# def edit(): - Alterar qualquer dado inserido no DB
+# Alterar qualquer dado inserido no DB
 
 def edit():
-
+    global c
+    line = consultar.tableWidget.currentRow()
+    cursor = con.cursor()
+    selectquery = ("Select codigo FROM produtos")
+    cursor.execute(selectquery)
+    readed_data = cursor.fetchall()
+    codigo = readed_data[line][0]
+    cursor = con.cursor()
+    selectquery2 = (
+        "SELECT * FROM produtos WHERE codigo = " + str(codigo) + (";"))
+    cursor.execute(selectquery2)
+    produto = cursor.fetchall()
     editwindow.show()
 
+    c = codigo
+
+    editwindow.lineEdit.setText(str(produto[0][0]))
+    editwindow.lineEdit_2.setText(str(produto[0][1]))
+    editwindow.lineEdit_3.setText(str(produto[0][2]))
+    editwindow.lineEdit_4.setText(str(produto[0][3]))
+    editwindow.lineEdit_5.setText(str(produto[0][4]))
+
+# Salvando os dados editados
+
+
+def save():
+    # Identifica do número do código do Produto
+    global c
+
+    # Valor digitado na caixa de texto para edição
+    descricao = editwindow.lineEdit_2.text()
+    preco = editwindow.lineEdit_3.text()
+    categoria = editwindow.lineEdit_4.text()
+    quantidade = editwindow.lineEdit_5.text()
+
+    # Atualizando o banco de dados
+    cursor = con.cursor()
+    editquery = ("UPDATE produtos SET descricao = '{}', preco = '{}', categoria = '{}', quantidade = '{}' WHERE codigo = {}".format(
+        descricao, preco, categoria, quantidade, c))
+    cursor.execute(editquery)
+    con.commit()
+    print("Dados alterados com sucesso!")
+    editwindow.close()
+    consultar.close()
+    consult()
 
 # Apagar dado inserido no DB
 
@@ -134,16 +178,16 @@ def delete():
     line = consultar.tableWidget.currentRow()
     consultar.tableWidget.removeRow(line)
     cursor = con.cursor()
-    query1 = ("Select codigo FROM produtos")
-    cursor.execute(query1)
+    selectquery = ("Select codigo FROM produtos")
+    cursor.execute(selectquery)
     readed_data = cursor.fetchall()
-    cod_value = readed_data[line][0]
-    print(cod_value)
+    codigo = readed_data[line][0]
+    print(codigo)
     cursor.close()
     cursor = con.cursor()
-    query2 = (
-        "DELETE FROM cadastro_estoque.produtos WHERE codigo = " + str(cod_value) + (";"))
-    cursor.execute(query2)
+    deletequery = (
+        "DELETE FROM cadastro_estoque.produtos WHERE codigo = " + str(codigo) + (";"))
+    cursor.execute(deletequery)
     con.commit()
 
     print("Item excluido da lista.")
@@ -163,6 +207,7 @@ formulario.pushButton_2.clicked.connect(consult)
 consultar.pushButton.clicked.connect(export)
 consultar.pushButton_2.clicked.connect(delete)
 consultar.pushButton_3.clicked.connect(edit)
+editwindow.pushButton.clicked.connect(save)
 
 formulario.show()
 app.exec()
