@@ -121,6 +121,11 @@ def consult():
 
 # def edit(): - Alterar qualquer dado inserido no DB
 
+def edit():
+
+    editwindow.show()
+
+
 # Apagar dado inserido no DB
 
 
@@ -134,10 +139,12 @@ def delete():
     readed_data = cursor.fetchall()
     cod_value = readed_data[line][0]
     print(cod_value)
+    cursor.close()
     cursor = con.cursor()
     query2 = (
-        "DELETE FROM `cadastro_estoque`.`produtos` WHERE `codigo` = '" + str(cod_value) + ("';"))
+        "DELETE FROM cadastro_estoque.produtos WHERE codigo = " + str(cod_value) + (";"))
     cursor.execute(query2)
+    con.commit()
 
     print("Item excluido da lista.")
 
@@ -149,10 +156,13 @@ formulario = uic.loadUi(
     "/home/andre/Área de Trabalho/Estudos/Cadastro-de-Produtos/formulario.ui")
 consultar = uic.loadUi(
     "/home/andre/Área de Trabalho/Estudos/Cadastro-de-Produtos/consultar.ui")
+editwindow = uic.loadUi(
+    "/home/andre/Área de Trabalho/Estudos/Cadastro-de-Produtos/editwindow.ui")
 formulario.pushButton.clicked.connect(insert)
 formulario.pushButton_2.clicked.connect(consult)
 consultar.pushButton.clicked.connect(export)
 consultar.pushButton_2.clicked.connect(delete)
+consultar.pushButton_3.clicked.connect(edit)
 
 formulario.show()
 app.exec()
