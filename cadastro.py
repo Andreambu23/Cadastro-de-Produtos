@@ -12,41 +12,6 @@ c = 0
 con = mysql.connector.connect(
     host='localhost', database='cadastro_estoque', user='andre2', password='anova123')
 
-# Exportar em arquivo
-
-
-def export():
-    cursor = con.cursor()
-    query = ("SELECT * FROM produtos")
-    cursor.execute(query)
-    readed_data = cursor.fetchall()
-    y = 0
-    pdf = canvas.Canvas("cadastro_produtos.pdf")
-    pdf.setFont("Times-Bold", 20)
-    pdf.drawString(200, 800, "Produtos Cadastrados:")
-    pdf.setFont("Times-Bold", 12)
-
-    # Posições dos tópicos na exibição do arquivo em PDF "X, Y"
-    # X é a distância entre um titulo em outro na mesma linha
-    pdf.drawString(10, 750, "CÓD")
-    pdf.drawString(50, 750, "PRODUTO")
-    pdf.drawString(280, 750, "PREÇO")
-    pdf.drawString(330, 750, "CATEGORIA")
-    pdf.drawString(480, 750, "QTD")
-
-    # Linha 37 espaçamento entre linhas.
-    for i in range(0, len(readed_data)):
-        y = y + 15
-        pdf.drawString(10, 750 - y, str(readed_data[i][0]))
-        pdf.drawString(50, 750 - y, str(readed_data[i][1]))
-        pdf.drawString(280, 750 - y, str(readed_data[i][2]))
-        pdf.drawString(330, 750 - y, str(readed_data[i][3]))
-        pdf.drawString(480, 750 - y, str(readed_data[i][4]))
-        #pdf.drawString(420, 750 - y, str(readed_data[i][5]))
-
-    pdf.save()
-    print("Planilha gerada com sucesso.")
-
 
 # Função de inserir as informações digitadas nos campos no banco de dados SQL
 
@@ -122,6 +87,60 @@ def consult():
             consultar.tableWidget.setItem(
                 i, j, QtWidgets.QTableWidgetItem(str(readed_data[i][j])))
 
+# Exportar em arquivo
+
+
+def export():
+    cursor = con.cursor()
+    query = ("SELECT * FROM produtos")
+    cursor.execute(query)
+    readed_data = cursor.fetchall()
+    y = 0
+    pdf = canvas.Canvas("cadastro_produtos.pdf")
+    pdf.setFont("Times-Bold", 20)
+    pdf.drawString(200, 800, "Produtos Cadastrados:")
+    pdf.setFont("Times-Bold", 12)
+
+    # Posições dos tópicos na exibição do arquivo em PDF "X, Y"
+    # X é a distância entre um titulo em outro na mesma linha
+    pdf.drawString(10, 750, "CÓD")
+    pdf.drawString(50, 750, "PRODUTO")
+    pdf.drawString(280, 750, "PREÇO")
+    pdf.drawString(330, 750, "CATEGORIA")
+    pdf.drawString(480, 750, "QTD")
+
+    # Linha 37 espaçamento entre linhas.
+    for i in range(0, len(readed_data)):
+        y = y + 15
+        pdf.drawString(10, 750 - y, str(readed_data[i][0]))
+        pdf.drawString(50, 750 - y, str(readed_data[i][1]))
+        pdf.drawString(280, 750 - y, str(readed_data[i][2]))
+        pdf.drawString(330, 750 - y, str(readed_data[i][3]))
+        pdf.drawString(480, 750 - y, str(readed_data[i][4]))
+        #pdf.drawString(420, 750 - y, str(readed_data[i][5]))
+
+    pdf.save()
+    print("Planilha gerada com sucesso.")
+
+def delete():
+
+    line = consultar.tableWidget.currentRow()
+    consultar.tableWidget.removeRow(line)
+    cursor = con.cursor()
+    selectquery = ("Select codigo FROM produtos")
+    cursor.execute(selectquery)
+    readed_data = cursor.fetchall()
+    codigo = readed_data[line][0]
+    print(codigo)
+    cursor.close()
+    cursor = con.cursor()
+    deletequery = (
+        "DELETE FROM cadastro_estoque.produtos WHERE codigo = " + str(codigo) + (";"))
+    cursor.execute(deletequery)
+    con.commit()
+
+    print("Item excluido da lista.")
+
 
 # Alterar qualquer dado inserido no DB
 
@@ -176,27 +195,8 @@ def save():
 # Apagar dado inserido no DB
 
 
-def delete():
-
-    line = consultar.tableWidget.currentRow()
-    consultar.tableWidget.removeRow(line)
-    cursor = con.cursor()
-    selectquery = ("Select codigo FROM produtos")
-    cursor.execute(selectquery)
-    readed_data = cursor.fetchall()
-    codigo = readed_data[line][0]
-    print(codigo)
-    cursor.close()
-    cursor = con.cursor()
-    deletequery = (
-        "DELETE FROM cadastro_estoque.produtos WHERE codigo = " + str(codigo) + (";"))
-    cursor.execute(deletequery)
-    con.commit()
-
-    print("Item excluido da lista.")
 
 
-# Selecionar produdo cadastrado e exibir na tela, "Ex.: Consulta de preço"
 
 app = QtWidgets.QApplication([])
 formulario = uic.loadUi(
